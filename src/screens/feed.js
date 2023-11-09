@@ -49,7 +49,7 @@ render() {
         },
     ]
     return (
-    <View>
+    <View style ={styles.container }>
         <FlatList
             data = {posts}
             keyExtractor = {item => item.id}
