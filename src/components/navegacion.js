@@ -15,8 +15,8 @@ render(
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Login" Component={ Login }/>
-                <Stack.Screen name="Register" Component={ Register }/>
+                <Stack.Screen name="Login" component={ Login }/>
+                <Stack.Screen name="Register" component={ Register }/>
             </Stack.Navigator>
         </NavigationContainer>
     )

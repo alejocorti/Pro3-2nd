@@ -6,7 +6,7 @@ import Register from './src/screens/register';
 
 export default function App() {
   return (
-<Register></Register>  
+<Navegacion></Navegacion> 
 );
 }
 

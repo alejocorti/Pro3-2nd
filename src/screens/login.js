@@ -29,6 +29,9 @@ export default class Login extends Component {
                 <TouchableOpacity onPress={() => this.onSubmit()} style={styles.login}>
                     <Text> Login </Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')} style={styles.registrate}>
+                    <Text> Registrate </Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -64,9 +67,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'pink',
-
-
-
+    }, 
+    registrate:{
+        width: 200,
+        height: 30,
+        borderColor: 'pink',
+        borderWidth: 1,
+        paddingLeft: 10,
+        marginTop: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'orange',
     }
 
 });
