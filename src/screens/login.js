@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View, TextInput,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput,TouchableOpacity, ActivityIndicator } from 'react-native';
 import { React, Component } from 'react'
 import { render } from 'react-dom';
+import { auth } from '../config';
+
 
 export default class Login extends Component {
     constructor(props) {
@@ -8,9 +10,26 @@ export default class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            info:'',
+            loading: false
             
         }
     }
+
+    onSubmit(){
+        this.setState({loading: true})
+        auth.signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then( response => {
+            this.setState({loading: false})
+            this.setState({info: 'Usuario okey'});
+         })     
+        .catch( error => {
+            this.setState({loading: false})
+          this.setState({info: error.message})
+        })
+    
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -32,6 +51,8 @@ export default class Login extends Component {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Register')} style={styles.registrate}>
                     <Text> Registrate </Text>
                 </TouchableOpacity>
+                { this.state.info.length >0 && <Text> {this.state.info} </Text> }
+              {this.state.loading &&  <ActivityIndicator size='large' color='green' /> }
             </View>
         )
     }
@@ -79,6 +100,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'orange',
-    }
+    },
 
 });

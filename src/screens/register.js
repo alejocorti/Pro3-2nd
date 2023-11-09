@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { React, Component } from 'react'
 import { render } from 'react-dom';
+import { auth } from '../config';
+
 
 export default class Register extends Component {
     constructor(props) {
@@ -10,10 +12,22 @@ export default class Register extends Component {
             password: '',
             foto: '',
             nombre: '',
-            bio: ''
+            bio: '',
+            info: '',
 
         }
     }
+    onSubmit(){
+        auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then( response => {
+            this.setState({info: 'Usuario registrado'});
+         })     
+        .catch( error => {
+          this.setState({info: error.message})
+        })
+    
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -50,8 +64,15 @@ export default class Register extends Component {
                     value={this.state.foto} />
 
                 <TouchableOpacity onPress={() => this.onSubmit()} style={styles.login}>
+                    <Text> Register </Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={styles.login}>
                     <Text> Login </Text>
                 </TouchableOpacity>
+
+              { this.state.info.length >0 && <Text> {this.state.info} </Text> }
+
             </View>
         )
     }
