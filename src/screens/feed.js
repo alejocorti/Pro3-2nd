@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator, FlatList } from 'react-native';
 import { React, Component } from 'react'
 import { render } from 'react-dom';
 import { auth } from '../config';
+import Post from '../components/post';
 
 
 export default class Feed extends Component {
@@ -17,9 +18,48 @@ export default class Feed extends Component {
     }
 
 render() {
-    return (<View><Text> hello </Text></View>)
-    
-    
+    const posts = [
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+        {
+            id:  Math.random(),
+            title: Math.random()
+        },
+    ]
+    return (
+    <View>
+        <FlatList
+            data = {posts}
+            keyExtractor = {item => item.id}
+            renderItem = {({item}) => (
+                <Post {...item}></Post>
+            ) }
+        />
+    </View>
+
+    )
 }
 }
 
