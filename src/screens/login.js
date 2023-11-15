@@ -3,9 +3,9 @@ import { TouchableOpacity, View, TextInput, Text, StyleSheet, Image, ActivityInd
 import { auth } from '../firebase/config';
 import logo from '../../assets/logo.png';
 
-class Login extends Component{
+class Login extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             props: props,
@@ -14,17 +14,17 @@ class Login extends Component{
             error: '',
             success: '',
             login: false,
-            rememberMe:false,
-            username:'',
+            rememberMe: false,
+            username: '',
             completed: false,
             loaderActive: true
-        }  
-    }  
- 
-    componentDidMount(){
+        }
+    }
+
+    componentDidMount() {
         auth.onAuthStateChanged(
             user => {
-                if(user) {
+                if (user) {
                     this.props.navigation.navigate('TabNavigation')
                 } else {
                     this.setState({
@@ -36,46 +36,30 @@ class Login extends Component{
     }
 
     onSubmit() {
-        if(this.state.completed === true){
+        if (this.state.completed === true) {
             auth.signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then(res => {
-                this.setState({ login: true })
-                this.props.navigation.navigate('TabNavigation')
-            })
-            .catch(error => this.setState({
-                error: error.message,
-            }))
+                .then(res => {
+                    this.setState({ login: true })
+                    this.props.navigation.navigate('TabNavigation')
+                })
+                .catch(error => this.setState({
+                    error: error.message,
+                }))
         } else {
 
             this.setState({
                 error: 'Tenés que completar los campos para iniciar sesión'
             })
         }
-            
+
     }
 
-    onChangeMail(text){
+    onChangeMail(text) {
         this.setState({
             email: text,
             error: ''
         })
-        if(text.length >= 4 && this.state.password.length >= 4){
-            this.setState({
-                completed: true
-            })
-        } else {
-            this.setState({
-                completed: false
-            })
-        }   
-    }
-
-    onChangePassword(text){
-        this.setState({
-            password: text,
-            error: ''
-        })
-        if(this.state.email.length >= 4 && text.length >= 4){
+        if (text.length >= 4 && this.state.password.length >= 4) {
             this.setState({
                 completed: true
             })
@@ -86,8 +70,24 @@ class Login extends Component{
         }
     }
 
-    render(){
-        return(
+    onChangePassword(text) {
+        this.setState({
+            password: text,
+            error: ''
+        })
+        if (this.state.email.length >= 4 && text.length >= 4) {
+            this.setState({
+                completed: true
+            })
+        } else {
+            this.setState({
+                completed: false
+            })
+        }
+    }
+
+    render() {
+        return (
             <View style={style.container}>
                 {this.state.loaderActive === true ?
                     <View>
@@ -97,35 +97,35 @@ class Login extends Component{
                         />
                         <ActivityIndicator size='large' color='green' />
                     </View>
-                :
+                    :
                     <View style={style.container}>
                         <Image
                             style={style.image}
                             source={logo}
                         />
                         <Text style={style.title}>LOG IN</Text>
-                        {this.state.error !== '' ? 
-                        <Text style={style.error}>{this.state.error}
-                        </Text> : null}
-                        {this.state.success !== '' ? 
-                        <Text style={style.success}>{this.state.success}
-                        </Text> : null}
+                        {this.state.error !== '' ?
+                            <Text style={style.error}>{this.state.error}
+                            </Text> : null}
+                        {this.state.success !== '' ?
+                            <Text style={style.success}>{this.state.success}
+                            </Text> : null}
 
-                        <TextInput 
-                        style={style.input} 
-                        keyboardType='email-address' 
-                        placeholder='email' 
-                        onChangeText={text => this.onChangeMail(text)} 
-                        value={this.state.email} />
+                        <TextInput
+                            style={style.input}
+                            keyboardType='email-address'
+                            placeholder='email'
+                            onChangeText={text => this.onChangeMail(text)}
+                            value={this.state.email} />
 
-                        <TextInput 
-                        style={style.input} 
-                        keyboardType='default' 
-                        secureTextEntry={true} 
-                        placeholder='password' 
-                        onChangeText={text => this.onChangePassword(text)} value={this.state.password}/>
+                        <TextInput
+                            style={style.input}
+                            keyboardType='default'
+                            secureTextEntry={true}
+                            placeholder='password'
+                            onChangeText={text => this.onChangePassword(text)} value={this.state.password} />
                         {this.state.completed === false ?
-                        
+
                             <TouchableOpacity onPress={() => this.onSubmit()} style={style.btnLoginDisabled}>
                                 <Text style={style.btnLoginTxtDisabled}>Ingresar</Text>
                             </TouchableOpacity>

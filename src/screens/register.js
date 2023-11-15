@@ -6,9 +6,9 @@ import CameraPost from '../components/CameraPost';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 
 
-class Register extends Component{
+class Register extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             props: props,
@@ -20,8 +20,8 @@ class Register extends Component{
             check: [],
             doubleCheck: [],
             cameraOpen: false,
-            userErr:'',
-            mailErr:''
+            userErr: '',
+            mailErr: ''
         }
     }
 
@@ -56,14 +56,14 @@ class Register extends Component{
         })
     } */
 
-    render(){
+    render() {
         console.log(this.state.check)
         console.log(this.state.doubleCheck);
 
         return (
             <View style={style.container} >
                 <Text style={style.title}>REGISTER</Text>
-                
+
                 {this.state.userErr !== '' ? <Text style={style.error}>{this.state.userErr}</Text> : null}
                 {this.state.mailErr !== '' ? <Text style={style.error}>{this.state.mail}</Text> : null}
                 {this.state.cameraOpen === false ?
@@ -106,7 +106,7 @@ class Register extends Component{
                             <Entypo name="circle-with-cross" size={40} color="red" />
                         </TouchableOpacity>
                     </View>
-    }
+                }
 
 
             </View>

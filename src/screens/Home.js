@@ -5,16 +5,16 @@ import Card from '../components/Card';
 import { db } from '../firebase/config';
 
 
-class Home extends Component{
- 
-    constructor(props){
+class Home extends Component {
+
+    constructor(props) {
         super(props);
         this.state = {
             posteos: [],
             loader: true
         }
     }
-    
+
     componentDidMount() {
         db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(docs => {
             let posts = [];
@@ -31,9 +31,9 @@ class Home extends Component{
         })
     };
 
-    render(){
-      
-        return(
+    render() {
+
+        return (
             <View style={style.container}>
                 <Image
                     style={style.image}
@@ -48,7 +48,7 @@ class Home extends Component{
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => <Card data={item} homeProps={this.props} />}
                     />
-                    
+
                 }
             </View>
         )
@@ -56,7 +56,7 @@ class Home extends Component{
 
 
 
-    
+
 }
 
 const style = StyleSheet.create({

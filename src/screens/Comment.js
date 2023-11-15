@@ -1,4 +1,4 @@
-import {React, Component} from "react";
+import { React, Component } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, TextInput } from "react-native";
 import { db, auth } from '../firebase/config';
 import firebase from "firebase";
@@ -6,9 +6,9 @@ import { FontAwesome, AntDesign, MaterialCommunityIcons } from '@expo/vector-ico
 import CommentsCard from "../components/CommentsCard";
 
 
-class Comment extends Component{
+class Comment extends Component {
 
-    constructor(props){
+    constructor(props) {
 
         super(props);
 
@@ -31,39 +31,39 @@ class Comment extends Component{
         )
     }
 
-    comment(){
+    comment() {
         this.setState({
             comentario: ''
         })
         db.collection('posts')
-        .doc(this.props.route.params.id)
-        .update({
-            comments: firebase.firestore.FieldValue.arrayUnion({
-                createdAt: Date.now(),
-                owner: auth.currentUser.email,
-                content: this.state.comentario
+            .doc(this.props.route.params.id)
+            .update({
+                comments: firebase.firestore.FieldValue.arrayUnion({
+                    createdAt: Date.now(),
+                    owner: auth.currentUser.email,
+                    content: this.state.comentario
+                })
             })
-        })
-        .then(()=> this.setState({
-            comentario: ''
-        }))
+            .then(() => this.setState({
+                comentario: ''
+            }))
 
-        .catch((e)=> console.log(e))
+            .catch((e) => console.log(e))
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <View style={style.container}>
-                <TouchableOpacity onPress={()=> this.props.navigation.navigate('TabNavigation')}>
-                    <AntDesign name="back" size={32} color="white" style={style.back}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('TabNavigation')}>
+                    <AntDesign name="back" size={32} color="white" style={style.back} />
                 </TouchableOpacity>
                 {this.state.comentarios.length === 0 ?
-                 <Text style={style.noComments}>Aún no hay comentarios. Se el primero en comentar!</Text>
-                :
-                <FlatList
-                    data={this.state.comentarios}
-                    renderItem={({ item }) => <CommentsCard data={item} commentsProps={this.props}/>}
-                /> 
+                    <Text style={style.noComments}>Aún no hay comentarios. Se el primero en comentar!</Text>
+                    :
+                    <FlatList
+                        data={this.state.comentarios}
+                        renderItem={({ item }) => <CommentsCard data={item} commentsProps={this.props} />}
+                    />
                 }
                 <View style={style.flex}>
                     <TextInput
@@ -89,7 +89,7 @@ const style = StyleSheet.create({
         height: '100vh',
         backgroundColor: 'rgb(0,0,0)'
     },
-    back:{
+    back: {
         marginBottom: 15,
         marginTop: 10,
         marginLeft: 10

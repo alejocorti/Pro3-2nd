@@ -1,14 +1,14 @@
-import React,{Component} from 'react';
-import {TouchableOpacity,View, Text, StyleSheet, TextInput, Image } from 'react-native';
-import {db, auth, storage} from '../firebase/config';
-import { FontAwesome, Ionicons, AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons'; 
+import React, { Component } from 'react';
+import { TouchableOpacity, View, Text, StyleSheet, TextInput, Image } from 'react-native';
+import { db, auth, storage } from '../firebase/config';
+import { FontAwesome, Ionicons, AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
 import CameraPost from '../components/CameraPost';
 import * as ImagePicker from 'expo-image-picker';
 
 
-class AddPost extends Component{
- 
-    constructor(props){
+class AddPost extends Component {
+
+    constructor(props) {
         super(props);
         this.state = {
             description: '',
@@ -40,96 +40,96 @@ class AddPost extends Component{
             enableBtn: false
         })
 
-        if(this.state.description === '') {
+        if (this.state.description === '') {
             this.setState({
                 msj: 'No hay descripcion'
-            }) 
-        } 
+            })
+        }
 
-        else if (this.state.photo === ''){
+        else if (this.state.photo === '') {
             this.setState({
                 msj: 'No hay foto'
-            }) 
-        } 
+            })
+        }
 
-        else if (this.state.enableBtn === false ) {
+        else if (this.state.enableBtn === false) {
             this.setState({
                 msj: 'La carga del posteo ya se esta procesando'
             })
         }
- 
-        else{
-        db.collection('posts').add({
-            owner: auth.currentUser.email, // funcionalidad de firebase que te ofrece todos los emtodos de autenticacion y ademas te ofrece toda la informacion del usuario autenticado
-            description: this.state.description,
-            createdAt: Date.now(), // devuelve la fecha en milisegundos
-            likes: [], // array de usuarios que le dieron like
-            comments: [], // array de comentarios
-            photo: this.state.photo // url de la foto
-        })
-        .then(res => {
-            this.props.navigation.navigate('TabNavigation') // redirecciona a la pantalla de inicio de la app una vez que se creo el posteo correctamente 
-            this.setState({
-                description: '',
-                photo: '',
-                msj: ''
+
+        else {
+            db.collection('posts').add({
+                owner: auth.currentUser.email, // funcionalidad de firebase que te ofrece todos los emtodos de autenticacion y ademas te ofrece toda la informacion del usuario autenticado
+                description: this.state.description,
+                createdAt: Date.now(), // devuelve la fecha en milisegundos
+                likes: [], // array de usuarios que le dieron like
+                comments: [], // array de comentarios
+                photo: this.state.photo // url de la foto
             })
-        })
-        .catch(error => this.setState({
-            msj: error.message
-        })
-        )
+                .then(res => {
+                    this.props.navigation.navigate('TabNavigation') // redirecciona a la pantalla de inicio de la app una vez que se creo el posteo correctamente 
+                    this.setState({
+                        description: '',
+                        photo: '',
+                        msj: ''
+                    })
+                })
+                .catch(error => this.setState({
+                    msj: error.message
+                })
+                )
         }
     }
 
     pickImage = async () => {
         let results = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
-            aspect: [2/1],
+            aspect: [2 / 1],
         })
         this.handleImagePicked(results);
-       }
+    }
 
     handleImagePicked = async (results) => {
         // bloque try-catch se usa para capturar cualquier error que pueda ocurrir durante el proceso 
         try {
-          if (!results.cancelled) {
-            this.savePhoto(results.uri);
-          }
-        } 
+            if (!results.cancelled) {
+                this.savePhoto(results.uri);
+            }
+        }
         catch (e) {
-          console.log(e);
-          alert("Image upload failed");
+            console.log(e);
+            alert("Image upload failed");
         }
     };
 
-    savePhoto(uploadUrl){
+    savePhoto(uploadUrl) {
         // se utiliza el metodo fetch para realizar una solicitud de http a la URL de la imagen 
         fetch(uploadUrl)
-         // con el metodo res.blob() se convierte en un objeto de tipo blob 
-         // blob es una representacion de datos binarios 
-         .then(res=>res.blob())
-         // se crea una referencia ref en el almacenamiento de firebase 
-         .then(image =>{
-            // se utiliza la carpeta photos y genera un nombre de archivo unico con date.now 
-           const ref=storage.ref(`photos/${Date.now()}.jpg`)
-           // se utiliza el metodo put de la referencia para cargar el objeto blob 
-           ref.put(image)
-                .then(()=>{
-                    // se utiliza el metodo getdownloadurl para obtener la URL 
-                   ref.getDownloadURL()
-                        .then(url => {
-                            // se llama al metodo onimageupload, se le pasa la url
-                            this.onImageUpload(url);
-                         })
-                 })
-         })
-         .catch(e=>console.log(e))
-       }
+            // con el metodo res.blob() se convierte en un objeto de tipo blob 
+            // blob es una representacion de datos binarios 
+            .then(res => res.blob())
+            // se crea una referencia ref en el almacenamiento de firebase 
+            .then(image => {
+                // se utiliza la carpeta photos y genera un nombre de archivo unico con date.now 
+                const ref = storage.ref(`photos/${Date.now()}.jpg`)
+                // se utiliza el metodo put de la referencia para cargar el objeto blob 
+                ref.put(image)
+                    .then(() => {
+                        // se utiliza el metodo getdownloadurl para obtener la URL 
+                        ref.getDownloadURL()
+                            .then(url => {
+                                // se llama al metodo onimageupload, se le pasa la url
+                                this.onImageUpload(url);
+                            })
+                    })
+            })
+            .catch(e => console.log(e))
+    }
 
-    render(){
-        return(
-            
+    render() {
+        return (
+
             <View style={style.container}>
                 {this.state.cameraOpen === false ?
                     <React.Fragment>
@@ -157,8 +157,8 @@ class AddPost extends Component{
                                 <Image
                                     style={style.image}
                                     source={{ uri: this.state.photo }}
-                                    // require: rutas relativas
-                                    // uri: rutas absolutas
+                                // require: rutas relativas
+                                // uri: rutas absolutas
                                 />
                                 <TouchableOpacity onPress={() => this.setState({ photo: '' })} style={style.btnDelete}><Text style={style.delete}>Borrar imagen</Text></TouchableOpacity>
                             </View>
@@ -167,7 +167,7 @@ class AddPost extends Component{
                             <Text style={style.textBtn}>Compartir</Text>
                         </TouchableOpacity>
                     </React.Fragment>
-                : 
+                    :
                     <View style={style.camView}>
                         <CameraPost style={style.cameraComponent} onImageUpload={(url) => this.onImageUpload(url)} />
                         <TouchableOpacity onPress={() => this.setState({ cameraOpen: false })} style={style.btnOff}>
@@ -204,21 +204,21 @@ const style = StyleSheet.create({
     imagenYDelete: {
         flex: 1
     },
-    btnDelete:{
-            border: 'solid',
-            borderWidth: 1,
-            borderColor: 'rgb(255, 0, 0)',
-            borderLeftColor: 'red',
-            borderTopColor: 'red',
-            borderRightColor: 'red',
-            borderBottomColor: 'red',
-            borderTopRightRadius: 8,
-            borderBottomLeftRadius: 8,
-            borderStyle: 'solid',
-            padding: 7.5,
-            width: '30%',
-            marginVertical: 10,
-        },
+    btnDelete: {
+        border: 'solid',
+        borderWidth: 1,
+        borderColor: 'rgb(255, 0, 0)',
+        borderLeftColor: 'red',
+        borderTopColor: 'red',
+        borderRightColor: 'red',
+        borderBottomColor: 'red',
+        borderTopRightRadius: 8,
+        borderBottomLeftRadius: 8,
+        borderStyle: 'solid',
+        padding: 7.5,
+        width: '30%',
+        marginVertical: 10,
+    },
     delete: {
         color: 'rgb(255, 0, 0)',
         fontSize: 14,
@@ -234,8 +234,8 @@ const style = StyleSheet.create({
         fontWeight: '600'
     },
     btnOff: {
-        position: 'absolute',  
-        right: 5, 
+        position: 'absolute',
+        right: 5,
         top: 5
     },
     camView: {

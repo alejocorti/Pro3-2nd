@@ -5,9 +5,9 @@ import { FontAwesome, Ionicons, AntDesign, Entypo, MaterialIcons } from '@expo/v
 import { storage } from '../firebase/config';
 
 
-class CameraPost extends Component{
+class CameraPost extends Component {
 
-    constructor(props){
+    constructor(props) {
 
         super(props);
         this.state = {
@@ -19,17 +19,17 @@ class CameraPost extends Component{
     };
 
     componentDidMount() {
-        
-        Camera.requestCameraPermissionsAsync()
-      
-        .then(() => {
-            this.setState({
-                permission: true,
-                showCamera: true
-            })
-        })
 
-        .catch(error => console.log(error))
+        Camera.requestCameraPermissionsAsync()
+
+            .then(() => {
+                this.setState({
+                    permission: true,
+                    showCamera: true
+                })
+            })
+
+            .catch(error => console.log(error))
     }
 
     takePicture() {
@@ -50,27 +50,27 @@ class CameraPost extends Component{
         })
     }
 
-    savePhoto(){
+    savePhoto() {
         fetch(this.state.photo)
-         .then(res=>res.blob()) 
-         .then(image =>{
-           const ref=storage.ref(`photos/${Date.now()}.jpg`)
-           ref.put(image)
-                .then(()=>{
-                   ref.getDownloadURL()
-                        .then(url => {
-                            this.props.onImageUpload(url);
-                         })
-                 })
-         })
+            .then(res => res.blob())
+            .then(image => {
+                const ref = storage.ref(`photos/${Date.now()}.jpg`)
+                ref.put(image)
+                    .then(() => {
+                        ref.getDownloadURL()
+                            .then(url => {
+                                this.props.onImageUpload(url);
+                            })
+                    })
+            })
 
-         .catch(e=>console.log(e))
-       }
+            .catch(e => console.log(e))
+    }
 
-    render(){
-        return(
+    render() {
+        return (
             <View style={style.container}>
-                {this.state.showCamera===true ?
+                {this.state.showCamera === true ?
                     <React.Fragment>
                         <Camera
                             style={style.camera}
@@ -81,7 +81,7 @@ class CameraPost extends Component{
                             <Ionicons name="radio-button-on-sharp" size={66} color="green" />
                         </TouchableOpacity>
                     </React.Fragment>
-                : null}
+                    : null}
                 {this.state.photo !== '' ?
                     <React.Fragment>
                         <Image
@@ -120,15 +120,15 @@ const style = StyleSheet.create({
         height: '100%'
     },
     btnCapture: {
-        position: 'absolute', 
-        left: 0, 
-        right: 0, 
-        bottom: 0,  
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
         alignItems: 'center'
     },
     btnOff: {
-        position: 'absolute',  
-        right: 5, 
+        position: 'absolute',
+        right: 5,
         top: 5
     },
     image: {
@@ -138,13 +138,13 @@ const style = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
-    checksDiv:{ 
-        position: 'absolute', 
+    checksDiv: {
+        position: 'absolute',
         flexDirection: 'row',
         flex: 2,
-        left: 0, 
-        right: 0, 
-        bottom: 0,  
+        left: 0,
+        right: 0,
+        bottom: 0,
         alignItems: 'center',
         justifyContent: 'space-between'
     }
