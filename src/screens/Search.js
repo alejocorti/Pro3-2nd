@@ -2,11 +2,9 @@ import { React, Component } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList } from "react-native";
 // importo el componente cardsearch generado por nosotros 
 import CardSearch from "../components/CardSearch";
-
 import { db } from '../firebase/config';
 
 class Search extends Component{
-
 
     constructor(props){
 

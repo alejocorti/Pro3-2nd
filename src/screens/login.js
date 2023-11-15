@@ -1,26 +1,12 @@
 import { React, Component } from 'react';
 import { TouchableOpacity, View, TextInput, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { auth } from '../firebase/config';
-
-// importo una imagen ubicada en assets 
 import logo from '../../assets/logo.png';
 
-// la clase login es un componente de React de la clase base "Component"
-// login es un componente personalizado que puedo usar en la app 
 class Login extends Component{
 
-    // el constructor es un metodo en javascript, sirve para inicializar el estado y las propiedades del objeto q creamos 
-    // recibe como parametro las props, las cuales son inmutables, no cambian
-    // las props son un objeto que contiene los valores de propiedades pasadas desde el componente padre 
     constructor(props){
-        // super(props) se utiliza para llamar al constructor de la clase base "component"
-        // permite que el constructor realice cualquier inicializacion o configuracion necesaria con las props 
-        // se asegura que inicien correctamente las propiedades heredadas 
-        // es importante para mantener la herencia y el comportamiento correcto de las props 
         super(props);
-        // this.state refiere al objeto de estado de un componente en react 
-        // el estado es un objeto que contiene datos que pueden cambiar a lo largo del ciclo de vida del componente 
-        // se utiliza para iniciar el estado del componente 
         this.state = {
             props: props,
             email: '',
@@ -56,17 +42,11 @@ class Login extends Component{
                 this.setState({ login: true })
                 this.props.navigation.navigate('TabNavigation')
             })
-            // el metodo setstate se utiliza dentro del onsubmit para actualizar el estado del componente 
-            // se asignan el mensaje de error error.message al estado error
-            // es util para mostrar el mensaje de error en la interfaz de usuario 
             .catch(error => this.setState({
                 error: error.message,
             }))
         } else {
-            // en este caso, se establece directamente el estado error con un mensaje de error predefinido 
-            // esto se realiza cuando el valor de this.state.completed es false 
-            // lo que indica que los campos no estan completos 
-            // se utiliza setstate, para actualizar el estado del componente y mostrar un mensaje de error especifico 
+
             this.setState({
                 error: 'Tenés que completar los campos para iniciar sesión'
             })
@@ -106,15 +86,7 @@ class Login extends Component{
         }
     }
 
-    
-
-
-    // el metodo render es parte del ciclo de vida de un componente en React 
-    // se usa para renderizar y mostrar el contenido del componente en la interfaz de usuario 
     render(){
-        // return es una declaracion utilizada en las funciones para devolver un valor o un conjunto de elementos 
-        // return marca el inicio del retorno del JSX (javascript XML)
-        // es una sintaxis similar a HTML utilizada en react para definir una estructura 
         return(
             <View style={style.container}>
                 {this.state.loaderActive === true ?

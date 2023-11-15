@@ -2,19 +2,13 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config';
 
-
 import avatar from '../../assets/avatar.jpeg';
-
-
 import Card from '../components/Card';
-
-
 import { AntDesign } from '@expo/vector-icons';
 
 
 class UsersProfile extends Component{
 
-    
     constructor(props){
         
         super(props);
@@ -26,9 +20,6 @@ class UsersProfile extends Component{
             posteos: []
         }
     }
-
-
-
     
     componentDidMount() {
         db.collection('users').where('owner', '==', this.props.route.params.email).onSnapshot(
@@ -56,7 +47,6 @@ class UsersProfile extends Component{
         )
 
     }
-
    
     render(){
       
@@ -98,7 +88,6 @@ class UsersProfile extends Component{
 
 
 }
-
 
 const style = StyleSheet.create({
     container: {

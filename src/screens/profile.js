@@ -2,16 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config';
 
-// importo una imagen ubicada en assets 
 import avatar from '../../assets/avatar.jpeg';
-
-// importo el componente card generado por nosotros 
 import Card from '../components/Card';
 
-// la profile newpost es un componente de React de la clase base "Component"
-// profile es un componente personalizado que puedo usar en la app 
 class Profile extends Component{
-
 
     constructor(props){
 
@@ -57,14 +51,8 @@ class Profile extends Component{
         .then(()=> this.props.navigation.navigate('Login'))
     }
 
-
-
-    // el metodo render es parte del ciclo de vida de un componente en React 
-    // se usa para renderizar y mostrar el contenido del componente en la interfaz de usuario 
     render(){
-        // return es una declaracion utilizada en las funciones para devolver un valor o un conjunto de elementos 
-        // return marca el inicio del retorno del JSX (javascript XML)
-        // es una sintaxis similar a HTML utilizada en react para definir una estructura 
+ 
         return(
             <View style={style.container}>
                 <View style={style.containerPic}>
@@ -96,14 +84,7 @@ class Profile extends Component{
         )
     }
 
-
-
-
-
-
-
 }
-
 
 const style = StyleSheet.create({
     container: {

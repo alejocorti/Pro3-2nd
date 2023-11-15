@@ -1,28 +1,15 @@
-
 import React, { Component } from 'react';
-
 import { TouchableOpacity, View,  Text, StyleSheet, Image } from 'react-native'
-
-
 import { auth, db, storage } from '../firebase/config';
-
-
 import CameraPost from '../components/CameraPost';
-
-
 import { Entypo, AntDesign, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
-
 class RegisterAddPhoto extends Component{
 
-    
     constructor(props){
-        
         super(props);
-       
-        this.state = {
-           
+        this.state = { 
             props: props,
             cameraOpen: false,
             photo: '',

@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import { FontAwesome, Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
-
-// importo los componentes generados por nosotros 
 
 import AddPost from "./AddPost";
 import Search from "./Search";
 import Home from "./Home";
 import Profile from "./Profile";
-
 
 
 export default function TabNavigation() {
