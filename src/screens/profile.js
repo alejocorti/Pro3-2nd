@@ -1,70 +1,145 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { React, Component } from 'react'
-import { render } from 'react-dom';
-import { auth } from '../config';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
+import { auth, db } from '../firebase/config';
+
+// importo una imagen ubicada en assets 
+import avatar from '../../assets/avatar.jpeg';
+
+// importo el componente card generado por nosotros 
+import Card from '../components/Card';
+
+// la profile newpost es un componente de React de la clase base "Component"
+// profile es un componente personalizado que puedo usar en la app 
+class Profile extends Component{
 
 
-export default class Profile extends Component {
-    constructor(props) {
-        super(props)
+    constructor(props){
+
+        super(props);
+       
         this.state = {
-            email: '',
-            password: '',
-            info: '',
-            loading: false
-
+            userData: {},
+            props: props,
+            posteos: []
         }
     }
-
-render() {
-    return (<View><Text> Profile </Text></View>)
     
-    
-}
+    componentDidMount() {
+        db.collection('users').where('owner', '==', auth.currentUser.email).onSnapshot(
+            docs => {
+                docs.forEach(doc => {
+                    this.setState({
+                        userData: doc.data()
+                    })
+                })
+            })
+
+        db.collection('posts').where('owner', '==', auth.currentUser.email).onSnapshot(
+            docs => {
+                let posts = [];
+                docs.forEach(doc => {
+                    posts.push({
+                        id: doc.id,
+                        data: doc.data()
+                    })
+                });
+                this.setState({
+                    posteos: posts
+                })
+            }
+        )
+
+    }
+
+
+    logout(){
+        auth.signOut()
+        .then(()=> this.props.navigation.navigate('Login'))
+    }
+
+
+
+    // el metodo render es parte del ciclo de vida de un componente en React 
+    // se usa para renderizar y mostrar el contenido del componente en la interfaz de usuario 
+    render(){
+        // return es una declaracion utilizada en las funciones para devolver un valor o un conjunto de elementos 
+        // return marca el inicio del retorno del JSX (javascript XML)
+        // es una sintaxis similar a HTML utilizada en react para definir una estructura 
+        return(
+            <View style={style.container}>
+                <View style={style.containerPic}>
+                    <Image
+                        style={style.image}
+                        source={this.state.userData.photo === '' ? avatar : this.state.userData.photo}
+                    />
+                    <View style={style.containerText}>
+                        <Text style={style.username}>{this.state.userData.userName}</Text>
+                        {this.state.userData.bio != '' ? 
+                                <Text style={style.bio}>{this.state.userData.bio}</Text>
+                            : null}
+                        <Text style={style.bio}>Cantidad de posteos: {this.state.posteos.length}</Text>
+                        <TouchableOpacity onPress={() => this.logout()}>
+                            <Text style={style.logout}>Cerrar sesión</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                
+                
+                <FlatList 
+                        style={style.posteos}
+                        data={this.state.posteos}
+                        keyExtractor={item => item.id.toString()}
+                        renderItem={({item}) => <Card data={item} homeProps={this.props}/>}
+                />
+            </View>
+
+        )
+    }
+
+
+
+
+
+
+
 }
 
-const styles = StyleSheet.create({
+
+const style = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: 'rgb(0,0,0)'
     },
-    titulo: {
-        fontSize: 30,
-        color: 'red'
+    image: {
+        width: 100,
+        height: 100
     },
-    field: {
-        width: 200,
-        height: 30,
-        borderColor: 'green',
-        borderWidth: 1,
-        paddingLeft: 10,
-        marginTop: 10,
+    containerPic: {
+        flex: 2,
+        flexDirection: 'row',
+        marginVertical: 20,
     },
-    login: {
-        width: 200,
-        height: 30,
-        borderColor: 'pink',
-        borderWidth: 1,
-        paddingLeft: 10,
-        marginTop: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'pink',
+    containerText: {
+        margin: 15,
+        width: '70vw',
+        flexGrow: 1,
+        flex: 1
     },
-    registrate: {
-        width: 200,
-        height: 30,
-        borderColor: 'pink',
-        borderWidth: 1,
-        paddingLeft: 10,
-        marginTop: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'orange',
+    username: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: 'rgb(255,255,255)'
     },
+    bio: {
+        fontSize: 16,
+        color: 'rgb(255,255,255)'
+    },
+    posteos: {
+        marginTop: 120
+    },
+    logout: {
+        color: '#0d9900'
+    }
+})
 
-});
+export default Profile;
