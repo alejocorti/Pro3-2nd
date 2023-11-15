@@ -12,36 +12,17 @@ import Card from '../components/Card';
 // profile es un componente personalizado que puedo usar en la app 
 class Profile extends Component{
 
-    // el constructor es un metodo en javascript, sirve para inicializar el estado y las propiedades del objeto q creamos 
-    // recibe como parametro las props, las cuales son inmutables, no cambian
-    // las props son un objeto que contiene los valores de propiedades pasadas desde el componente padre 
+
     constructor(props){
-        // super(props) se utiliza para llamar al constructor de la clase base "component"
-        // permite que el constructor realice cualquier inicializacion o configuracion necesaria con las props 
-        // se asegura que inicien correctamente las propiedades heredadas 
-        // es importante para mantener la herencia y el comportamiento correcto de las props 
+
         super(props);
-        // this.state refiere al objeto de estado de un componente en react 
-        // el estado es un objeto que contiene datos que pueden cambiar a lo largo del ciclo de vida del componente 
-        // se utiliza para iniciar el estado del componente 
+       
         this.state = {
-            // las siguientes 3 son propiedades 
-            // props hace referencia a las props recibidas por el componente 
-            // userData se utiliza para almacenar datos del usuario, se actualiza y utiliza diferentes partes de la app 
-            // userdata lleva {} porque se espera que almacene multiples propiedades y valores 
-            // userdata almacena nombre, correo electronico, foto de perfil, etc 
-            // posteos almacena una lista de publicaciones en la app 
             userData: {},
             props: props,
             posteos: []
         }
     }
-
-
-    // el metodo componentDidMount es un metodo del ciclo de vida de un componente en react 
-    // se llama automaticamente despues de que el componente se haya montado en el DOM
-    // el DOM es una interfaz que permite acceder y manipular los elementos y contenido de un documento de manera programatica 
-    // el DOM organiza los elementos del documento en una etrucutra de arbol, donde cada elemento es un nodo en el arbol 
     
     componentDidMount() {
         db.collection('users').where('owner', '==', auth.currentUser.email).onSnapshot(
@@ -123,11 +104,7 @@ class Profile extends Component{
 
 }
 
-// se utiliza const para declarar una constante en javascript
-// en este caso declare la variable style como una constante y le asigne el objeto StyleSheet.create
-// se define un objeto style utilizando un metodo StyleSheet.create de react native 
-// el objeto contiene estilos CSS que se usan para dar estilo a los componentes 
-// estos estilos se aplican a los componentes correspondientes en el codigo JSX para darles apariencia 
+
 const style = StyleSheet.create({
     container: {
         flex: 1,
@@ -165,8 +142,4 @@ const style = StyleSheet.create({
     }
 })
 
-// export default indica que se esta exportando el componente (archivo entero)
-// al usar export default no es necesario especificar un nombre para importar el componente en destino 
-// solo se puede tener una exportacion predeterminada por archivo 
-// esta listo para poder importarlo desde otro modulo 
 export default Profile;
