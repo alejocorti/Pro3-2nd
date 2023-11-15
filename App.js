@@ -1,15 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Navegacion from './src/components/navegacion';
-import Login from './src/screens/login';
-import Register from './src/screens/register';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import TabNavigation from './src/screens/TabNavigation';
+import Comment from './src/screens/Comment';
+import UsersProfile from './src/screens/UsersProfile.js';
+import RegisterAddPhoto from './src/screens/RegisterAddPhoto.js';
 
 export default function App() {
-  return (
-<Navegacion></Navegacion> 
-);
+
+  const Stack = createNativeStackNavigator();
+
+    return(
+
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name='Login' component={Login} options={{headerShown: false}}/> 
+          <Stack.Screen name='Register' component={Register} options={{headerShown: false}}/>
+          <Stack.Screen name='Comment' component={Comment} options={{headerShown: false}} />
+          <Stack.Screen name='UsersProfile' component={UsersProfile} options={{headerShown: false}} />
+          <Stack.Screen name='RegisterAddPhoto' component={RegisterAddPhoto} options={{headerShown: false}} />
+          <Stack.Screen name='TabNavigation' component={TabNavigation} options={{headerShown: false}} />
+        </Stack.Navigator>
+      </NavigationContainer> 
+    )
 }
 
+// declaro la constante style en javascript 
+// almacena los estilos definidos para la aplicacion 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
