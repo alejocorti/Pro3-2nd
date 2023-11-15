@@ -8,7 +8,7 @@ import { FontAwesome, Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 import AddPost from "./AddPost";
 import Search from "./Search";
 import Home from "./Home";
-
+import Profile from "./Profile";
 
 
 
