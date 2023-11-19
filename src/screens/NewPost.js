@@ -16,4 +16,25 @@ class NewPost extends Component{
         comments:[]
       }
     }
+    actualizarDescripcion(text){
+        this.setState({
+          descripcion: text
+        })
+      }
+
+      crearPosteo({ descripcion, foto, likes, comments }) {
+        db.collection('posteos').add({
+          owner: auth.currentUser.email,
+          descripcion: descripcion,
+          foto: foto,
+          createdAt: Date.now(),
+          likes: likes,
+          comments: comments,
+        })
+          .then((resp) => {
+            this.props.navigation.navigate('Home')
+          })
+          .catch(err => console.log(err))
+    
+      }
 }
