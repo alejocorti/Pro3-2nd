@@ -37,4 +37,25 @@ class NewPost extends Component{
           .catch(err => console.log(err))
     
       }
-}
+
+      render(){
+        return(
+        <View>
+          <FormPost actualizarDescripcion={(text) => this.actualizarDescripcion(text) }></FormPost>
+          <TouchableOpacity
+            onPress={() => this.crearPosteo({
+              descripcion: this.state.descripcion,
+              foto: this.state.foto,
+              likes: this.state.likes,
+              comments: this.state.comments
+            })}
+          >
+            <Text>Enviar Posteo</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+  
+  export default NewPost
+
