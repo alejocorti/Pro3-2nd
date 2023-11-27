@@ -21,7 +21,7 @@ export default class FormPost extends Component {
 
 const styles = StyleSheet.create({
     input: {
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: 'red',
         padding: 11
     }
