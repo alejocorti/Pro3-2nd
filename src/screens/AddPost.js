@@ -1,282 +1,75 @@
-import React, { Component } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, TextInput, Image } from 'react-native';
-import { db, auth, storage } from '../firebase/config';
-import { FontAwesome, Ionicons, AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
-import CameraPost from '../components/CameraPost';
-import * as ImagePicker from 'expo-image-picker';
+// importo los modulos react y component de la biblioteca react 
+// me permite utilizar las funcionalidades de react y la clase component para crear componen funcionalidades especificas 
+import React, { Component } from "react";
+
+// importo la funcion createbottomtabnavigator del paquete de react 
+// proporciona un conjunto de herramientas para la navegacion en aplicaciones react 
+// la funcion me permite crear un navegador de pestaneas en la parte inferior 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+// importamos varios conjunto sde iconos para agragar graficos y visuales 
+// contenemos iconos de difenretes fuentes como fontawesome, ionicos, antdesign. 
+// los utilizamos con la linea de codigo <FontAwesome name="check" size={24} color="green" />
+import { FontAwesome, Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
+
+// importo los componentes generados por nosotros 
+import Profile from "./Profile";
+import AddPost from "./AddPost";
+import Search from "./Search";
+import Home from "./Home";
+
+// el archivo TabNavigation utiliza un enfoque funcional para definir el componente en lugar de un componente de clase 
+// no requiere un constructor porque no utiliza un estado interno, ni enlaza metodos de clase 
+// este enfoque funcional es preferible cuando no se requiere un estaod interno complejo 
+// permite un codigo mas limpio y legible al eliminar la necesidad de escribir un constructor 
+// los hooks proporcionan una forma mas intuitiva y flexible de trabajar 
 
 
-class AddPost extends Component {
+export default function TabNavigation() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            description: '',
-            msj: '',
-            cameraOpen: false,
-            photo: '',
-            enableBtn: true
+  const Tab = createBottomTabNavigator();
+
+  return (
+    <Tab.Navigator 
+      screenOptions={{ tabBarShowLabel: false,
+        
+          "tabBarActiveBackgroundColor": "#000000",
+          "tabBarInactiveBackgroundColor": "#181818",
+          "tabBarStyle": [
+            {
+              "display": "flex"
+            },
+            null
+          ]
+      }}>
+      <Tab.Screen
+        name='Home'
+        component={Home}
+        options={
+          { tabBarIcon: ({focused, color}) => <FontAwesome name="home" size={24} color={focused ? "#0d9900" : "white"}/>, headerShown: false }
         }
-    }
-
-    onImageUpload(url) {
-
-        this.setState({
-            photo: url,
-            cameraOpen: false,
-            msj: ''
-        })
-    }
-
-    mostrarCamara() {
-
-        this.setState({
-            cameraOpen: true
-        })
-    }
-
-    crearPost() {
-        this.setState({
-            enableBtn: false
-        })
-
-        if (this.state.description === '') {
-            this.setState({
-                msj: 'No hay descripcion'
-            })
+      />
+      <Tab.Screen
+        name='AddPost'
+        component={AddPost}
+        options={
+          { tabBarIcon: ({focused, color}) => <AntDesign name="plus" size={24} color={focused ? "#0d9900" : "white"} />, headerShown: false }
         }
-
-        else if (this.state.photo === '') {
-            this.setState({
-                msj: 'No hay foto'
-            })
+      />
+      {<Tab.Screen
+        name='Search'
+        component={Search}
+        options={
+          { tabBarIcon: ({focused, color}) => <Entypo name="magnifying-glass" size={24} color={focused ? "#0d9900" : "white"} />, headerShown: false }
         }
-
-        else if (this.state.enableBtn === false) {
-            this.setState({
-                msj: 'La carga del posteo ya se esta procesando'
-            })
+      />}
+      {<Tab.Screen
+        name='Profile'
+        component={Profile}
+        options={
+          { tabBarIcon: ({focused, color}) => <Ionicons name="person-circle-outline" size={24} color={focused ? "#0d9900" : "white"} />, headerShown: false }
         }
-
-        else {
-            db.collection('posts').add({
-                owner: auth.currentUser.email, // funcionalidad de firebase que te ofrece todos los emtodos de autenticacion y ademas te ofrece toda la informacion del usuario autenticado
-                description: this.state.description,
-                createdAt: Date.now(), // devuelve la fecha en milisegundos
-                likes: [], // array de usuarios que le dieron like
-                comments: [], // array de comentarios
-                photo: this.state.photo // url de la foto
-            })
-                .then(res => {
-                    this.props.navigation.navigate('TabNavigation') // redirecciona a la pantalla de inicio de la app una vez que se creo el posteo correctamente 
-                    this.setState({
-                        description: '',
-                        photo: '',
-                        msj: ''
-                    })
-                })
-                .catch(error => this.setState({
-                    msj: error.message
-                })
-                )
-        }
-    }
-
-    pickImage = async () => {
-        let results = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true,
-            aspect: [2 / 1],
-        })
-        this.handleImagePicked(results);
-    }
-
-    handleImagePicked = async (results) => {
-        // bloque try-catch se usa para capturar cualquier error que pueda ocurrir durante el proceso 
-        try {
-            if (!results.cancelled) {
-                this.savePhoto(results.uri);
-            }
-        }
-        catch (e) {
-            console.log(e);
-            alert("Image upload failed");
-        }
-    };
-
-    savePhoto(uploadUrl) {
-        // se utiliza el metodo fetch para realizar una solicitud de http a la URL de la imagen 
-        fetch(uploadUrl)
-            // con el metodo res.blob() se convierte en un objeto de tipo blob 
-            // blob es una representacion de datos binarios 
-            .then(res => res.blob())
-            // se crea una referencia ref en el almacenamiento de firebase 
-            .then(image => {
-                // se utiliza la carpeta photos y genera un nombre de archivo unico con date.now 
-                const ref = storage.ref(`photos/${Date.now()}.jpg`)
-                // se utiliza el metodo put de la referencia para cargar el objeto blob 
-                ref.put(image)
-                    .then(() => {
-                        // se utiliza el metodo getdownloadurl para obtener la URL 
-                        ref.getDownloadURL()
-                            .then(url => {
-                                // se llama al metodo onimageupload, se le pasa la url
-                                this.onImageUpload(url);
-                            })
-                    })
-            })
-            .catch(e => console.log(e))
-    }
-
-    render() {
-        return (
-
-            <View style={style.container}>
-                {this.state.cameraOpen === false ?
-                    <React.Fragment>
-                        {this.state.msj !== '' ? <Text style={style.error}>{this.state.msj}</Text> : null}
-                        <View style={style.inputsYBtns}>
-                            <Text style={style.title}>Escribí lo que quieras postear</Text>
-                            <TextInput
-                                style={style.description}
-                                keyboardType='default'
-                                placeholder='Compartí lo que pensás'
-                                onChangeText={text =>
-                                    this.setState({ description: text, error: '', msj: '' })
-                                }
-                                value={this.state.description}
-                            />
-                            <TouchableOpacity onPress={() => this.mostrarCamara()} style={style.mostrarCamara}>
-                                <Text style={style.mostrarCamaraTxt}><AntDesign name="camerao" size={24} color="white" /> Agregar foto</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.pickImage()} style={style.mostrarCamara}>
-                                <Text style={style.mostrarCamaraTxt}><MaterialIcons name="add-photo-alternate" size={24} color="white" /> Agregar foto de la galeria</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {this.state.photo !== '' ?
-                            <View style={style.imagenYDelete}>
-                                <Image
-                                    style={style.image}
-                                    source={{ uri: this.state.photo }}
-                                // require: rutas relativas
-                                // uri: rutas absolutas
-                                />
-                                <TouchableOpacity onPress={() => this.setState({ photo: '' })} style={style.btnDelete}><Text style={style.delete}>Borrar imagen</Text></TouchableOpacity>
-                            </View>
-                            : null}
-                        <TouchableOpacity onPress={() => this.crearPost()} style={style.btnPost}>
-                            <Text style={style.textBtn}>Compartir</Text>
-                        </TouchableOpacity>
-                    </React.Fragment>
-                    :
-                    <View style={style.camView}>
-                        <CameraPost style={style.cameraComponent} onImageUpload={(url) => this.onImageUpload(url)} />
-                        <TouchableOpacity onPress={() => this.setState({ cameraOpen: false })} style={style.btnOff}>
-                            <Entypo name="circle-with-cross" size={40} color="red" />
-                        </TouchableOpacity>
-                    </View>
-                }
-            </View>
-        )
-    }
-
-
-};
-
-// se utiliza const para declarar una constante en javascript
-// en este caso declare la variable style como una constante y le asigne el objeto StyleSheet.create
-// se define un objeto style utilizando un metodo StyleSheet.create de react native 
-// el objeto contiene estilos CSS que se usan para dar estilo a los componentes 
-// estos estilos se aplican a los componentes correspondientes en el codigo JSX para darles apariencia 
-const style = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'rgb(0,0,0)',
-        color: 'rgb(255,255,255)',
-        padding: 15,
-        justifyContent: 'center'
-    },
-    error: {
-        color: 'rgb(255, 0, 0)',
-    },
-    inputsYBtns: {
-        flex: 1
-    },
-    imagenYDelete: {
-        flex: 1
-    },
-    btnDelete: {
-        border: 'solid',
-        borderWidth: 1,
-        borderColor: 'rgb(255, 0, 0)',
-        borderLeftColor: 'red',
-        borderTopColor: 'red',
-        borderRightColor: 'red',
-        borderBottomColor: 'red',
-        borderTopRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        borderStyle: 'solid',
-        padding: 7.5,
-        width: '30%',
-        marginVertical: 10,
-    },
-    delete: {
-        color: 'rgb(255, 0, 0)',
-        fontSize: 14,
-    },
-    description: {
-        backgroundColor: 'rgb(255,255,255)',
-        padding: 20,
-        fontSize: 16,
-        marginVertical: 15
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: '600'
-    },
-    btnOff: {
-        position: 'absolute',
-        right: 5,
-        top: 5
-    },
-    camView: {
-        width: '100%',
-        height: '100%'
-    },
-    btnPost: {
-        border: 'solid',
-        borderWidth: 1,
-        borderColor: 'rgb(150,150,150)',
-        borderLeftColor: 'white',
-        borderTopColor: 'white',
-        borderRightColor: 'white',
-        borderBottomColor: 'white',
-        borderTopRightRadius: 8,
-        borderBottomLeftRadius: 8,
-        borderStyle: 'solid',
-        padding: 7.5,
-        width: '30%',
-    },
-    textBtn: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: 'rgb(230, 230, 230)'
-    },
-    mostrarCamara: {
-        backgroundColor: 'rgb(20,150,20)',
-        padding: 10,
-        marginBottom: 15,
-    },
-    mostrarCamaraTxt: {
-        color: 'rgb(240,240,240)'
-    },
-    image: {
-        height: '50%',
-        aspectRatio: 20 / 10
-    }
-})
-
-// export default indica que se esta exportando el componente (archivo entero)
-// al usar export default no es necesario especificar un nombre para importar el componente en destino 
-// solo se puede tener una exportacion predeterminada por archivo 
-// esta listo para poder importarlo desde otro modulo 
-export default AddPost;
+      />}
+    </Tab.Navigator>
+  )
+}
