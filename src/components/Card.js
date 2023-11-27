@@ -191,7 +191,7 @@ const style = StyleSheet.create({
         width: '100vw',
     },
     crossComments: {
-        marginBottom: 15
+        marginBottom: 14
     }
 })
 
