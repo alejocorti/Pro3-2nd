@@ -1,19 +1,14 @@
 import {React, Component} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { db, auth } from '../firebase/config';
-
-//importo el moduo firebase de biblioteca firebase para acceder a diferentes servicios 
 import firebase from "firebase";
 import { FontAwesome, AntDesign, Entypo, FontAwesome5 } from '@expo/vector-icons';
-
-//importo el componente comment 
 import Comment from "../screens/Comment";
 
-// la clase card es un componente de React de la clase base "Component"
-// card es un componente personalizado que puedo usar en la app 
+
 class Card extends Component{
     constructor(props){
-
+      
         super(props);
         this.state = {
             props: props,
@@ -26,48 +21,45 @@ class Card extends Component{
 
 
     componentDidMount() {
-       
+        
         if (this.props.data.data.likes.includes(auth.currentUser.email)) {
             this.setState({
                 miLike: true
             })
         } 
-
+   
         if (auth.currentUser.email === this.props.data.data.owner){
             this.setState({
                 owner: true
             })
         }
     }
+
+  
     botonLike(){
-        // en la primera condicion se verifica si el estado miLike es true, lo que indica si el usuario dio like 
+       
         if(this.state.miLike === true){
-            // en ese caso se actualiza el estado estableciendo miLike, en false para indicar que el usuario quito el like
-            // tambien reduce 1 la cantidad de likes
+         
             this.setState({
                 miLike: false,
                 cantidadDeLikes: this.state.cantidadDeLikes -1,
             })
-            // ademas llama a la funcion disLike, para realizar acciones necesarias con el dislike 
-            // envia una solicitud al servidor para registrar que el usuario dio un dislike 
             this.disLike()
+      
         } else{
             this.setState({
                 miLike: true,
                 cantidadDeLikes: this.state.cantidadDeLikes +1,
             })
-            // envia solicitud al servidor indicando que se dio un like 
             this.likes()
         }
     }
+
+
     likes() {
-        // accede a la coleccion posts utilizando db.collection('post')
         db.collection('posts')
         // obtengo un documento especifico .doc(this.props.data.id), lo de adentro es el identificador al q le asigno el like
         .doc(this.props.data.id)
-        // utilizo el metodo update para actualizar el documento 
-        // firebase.firestore.FieldValue.arrayUnion uso para agregar el coreo al array existente dee likes 
-        // el motodo update devuelve una promesa 
         .update({
             // actualizo el campo likes de un documento de firestore 
             // el mail que agrego es el auth.currectUser.email
@@ -78,34 +70,20 @@ class Card extends Component{
         .then(()=> 
         console.log('like')
            )
-        
         .catch(error=>console.log(error))
     }
 
-    // la funcion dislike realiza una operacion en la base de datos para quitar el correo electronico del usuario 
-    // se quita al array de likes en un documento especifico de posts 
+
     disLike() {
-        // accede a la coleccion posts utilizando db.collection('post')
         db.collection('posts')
         // obtengo un documento especifico .doc(this.props.data.id), lo de adentro es el identificador al q le quito el like
         .doc(this.props.data.id)
-        // utilizo el metodo update para actualizar el documento 
-        // firebase.firestore.FieldValue.arrayUnion uso para quitar el coreo al array existente de likes 
-        // el motodo update devuelve una promesa 
         .update({
-            // actualizo el campo likes de un documento de firestore 
-            // el mail que quito es el auth.currectUser.email
-            // cambie a arrayRemove 
             likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
         })
         .then(()=> 
-            // utiliza then para deolver la promesa 
-            // realiza una accion despues de que se completo la actualizacion, muestra dislike en la consola 
             console.log('disLike')
            )
-        // catch es un metodo utilizado en javascript para capturar y manejar errores de bloques de codigo 
-        // capturamos cualquier error que pueda ocurrir durante la solicitud 
-        // si se produce un error se registra en la consola, y lo podemos manejar de manera adecuada
         .catch(error=>console.log(error))
     }
 
@@ -117,18 +95,22 @@ class Card extends Component{
         .doc(this.props.data.id)
         // llamo al metodo delete en el documento para eliminarlo de la coleccion 
         .delete()
-     
+        // uso el metodo then para realizar alguna accion despues que la eliminacion se haya completado
+        // en este caso se imprime post eliminado 
         .then(() => {
             console.log('Post eliminado');
         })
-
+        // catch es un metodo utilizado en javascript para capturar y manejar errores de bloques de codigo 
+        // capturamos cualquier error que pueda ocurrir durante la solicitud 
+        // si se produce un error se registra en la consola, y lo podemos manejar de manera adecuada
         .catch((e) => { console.log(e);
         });
     }
 
+
     render(){
-       
         return(
+
             <View style={style.cardContainer}>
                     <View style={style.flex}>
                         <TouchableOpacity onPress={() => this.props.homeProps.navigation.navigate('UsersProfile', { email: this.props.data.data.owner })}>
@@ -167,7 +149,6 @@ class Card extends Component{
         )
     }
 }
-
  
 const style = StyleSheet.create({
     cardContainer: {

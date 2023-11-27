@@ -1,27 +1,36 @@
-import {React, Component} from "react"; 
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList} from "react-native";
+import {React, Component} from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from "react-native";
 
 class CommentsCard extends Component{
-    constructor (props){
+
+
+    constructor(props){
+       
         super(props);
-        this.state ={
+       
+        this.state = {
+            
             props: props
         }
     };
-    
-    render(){
-        <View style={style.container}>
-            <TouchableOpacity onPress={()=> this.props.commentsProps.navigation.navigate('UsersProfile', {email: this.props.data.owner})}>
-            <Text style={style.owner}>{this.props.data.owner}</Text>
-            </TouchableOpacity>
-            <Text style={style.content}>{this.props.data.content}</Text>
-        </View>
 
+  
+    render(){
+       
+        return(
+    
+            <View style={style.container}>
+                <TouchableOpacity onPress={()=> this.props.commentsProps.navigation.navigate('UsersProfile', {email: this.props.data.owner})}>
+                    <Text style={style.owner}>{this.props.data.owner}</Text>
+                </TouchableOpacity>
+                <Text style={style.content}>{this.props.data.content}</Text>
+            </View>
+        )
     }
 }
 
 const style = StyleSheet.create({
-    container:{
+    container: {
         width: '100vw',
         padding: 10,
         marginBottom: 10,
@@ -38,7 +47,7 @@ const style = StyleSheet.create({
         color: 'rgb(255,255,255)',
         fontSize: 16
     }
-
 })
+
 
 export default CommentsCard;
