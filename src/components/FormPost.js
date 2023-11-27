@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderColor: 'red',
-        padding: 10
+        padding: 11
     }
 })
